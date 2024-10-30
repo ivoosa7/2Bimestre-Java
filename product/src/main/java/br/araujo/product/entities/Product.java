@@ -1,7 +1,12 @@
 package br.araujo.product.entities;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Product {
     
+    @Id
     private long id;
     private String name;
     private double price;
@@ -30,6 +35,5 @@ public class Product {
     public void setCategory(String category) {
         this.category = category;
     }
-
     
 }
