@@ -3,6 +3,8 @@ package br.araujo.product.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +22,19 @@ public class ProductController  {
     private ProductService service;
 
     @GetMapping
-    public List<Product> getProducts(){
-        return service.getAllProducts();
+    public ResponseEntity<List<Product>> getProducts(){
+        return ResponseEntity.ok(service.getAllProducts());
     }
 
-    @GetMapping("id")
-    public Product getProduct(@PathVariable Long id){
-        return service.getProductById(id);
+    @GetMapping("{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable long id){
+        return ResponseEntity.ok(service.getProductById(id));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteProduct(long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
