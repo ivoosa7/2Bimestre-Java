@@ -7,11 +7,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.araujo.product.dtos.ProductResponse;
 import br.araujo.product.entities.Product;
 import br.araujo.product.services.ProductService;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 //Isso aqui mexerá com endpoints
 @RestController
@@ -22,7 +27,7 @@ public class ProductController  {
     private ProductService service;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts(){
+    public ResponseEntity<List<ProductResponse>> getProducts(){
         return ResponseEntity.ok(service.getAllProducts());
     }
 
@@ -37,4 +42,15 @@ public class ProductController  {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping()
+    public ResponseEntity<Void> updateProduct(@PathVariable long id, @RequestBody Product product){
+        service.update(product, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping()
+    public ResponseEntity<Product> saveProduct(@RequestBody Product product){
+        Product newProduct = service.save(product);
+        return ResponseEntity.created(null).body(newProduct);
+    }
 }
