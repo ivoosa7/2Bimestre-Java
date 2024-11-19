@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.araujo.product.Mapper.ProductMapper;
+import br.araujo.product.dtos.ProductRequest;
 import br.araujo.product.dtos.ProductResponse;
 import br.araujo.product.entities.Product;
 import br.araujo.product.repositories.RepositoryProduct;
@@ -24,9 +25,11 @@ public class ProductService {
                                    .collect(Collectors.toList());
     }
 
-    public Product getProductById(long id){
-        return repository.findById(id).orElseThrow(
+    public ProductResponse getProductById(long id){
+        Product product = repository.findById(id).orElseThrow(
             () -> new EntityNotFoundException("Produto não encontrado"));
+
+            return ProductMapper.toDTO(product);
     }
 
     public void delete(long id){
@@ -37,16 +40,17 @@ public class ProductService {
         }
     }
 
-    public Product save(Product product){
-        return repository.save(product);
+    public ProductResponse save(ProductRequest product){
+        Product newProduct = repository.save(ProductMapper.toEntity(product));
+        return ProductMapper.toDTO(newProduct);
     }
 
-    public void update(Product product, long id){
+    public void update(ProductRequest product, long id){
         Product aux = repository.getReferenceById(id);
 
-        aux.setCategory(product.getCategory());
-        aux.setName(product.getName());
-        aux.setPrice(product.getPrice());
+        aux.setCategory(product.category());
+        aux.setName(product.name());
+        aux.setPrice(product.price());
 
         repository.save(aux);
     }
